@@ -1,0 +1,44 @@
+AllCops:
+  Exclude:
+    - 'config/**/*'
+    - 'spec/spec_helper.rb'
+    - 'spec/rails_helper.rb'
+    - 'vendor/**/*'
+    - 'db/**/*'
+    - 'db/schema.rb'
+    - 'bin/**/*'
+
+Documentation:
+  Enabled: false
+
+Layout/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+  IndentationWidth: 2
+
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: true
+  CountComments: false
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/ModuleLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*.rb'
+
+Metrics/MethodLength:
+  Enabled: true
+  Exclude:
+    - 'spec/**/*.rb'
+
+Style/GuardClause:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
