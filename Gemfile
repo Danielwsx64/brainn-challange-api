@@ -16,10 +16,12 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 group :development, :test do
-  gem 'rspec-rails'
+  gem 'factory_bot_rails'
   gem 'pry-byebug'
+  gem 'rspec-rails'
   gem 'rubocop'
   gem 'rubycritic'
+  gem 'shoulda-matchers'
   gem 'simplecov', require: false
 end
 
