@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby '2.4.2'
 
+gem 'faraday'
 gem 'pg', '>= 0.18', '< 2.0'
 gem 'puma', '~> 3.11'
 gem 'rails', '~> 5.2.0'
