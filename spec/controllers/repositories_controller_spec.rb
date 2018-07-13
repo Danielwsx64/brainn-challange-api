@@ -32,4 +32,22 @@ describe RepositoriesController, type: :controller do
       end
     end
   end
+
+  describe 'POST #fetch' do
+    it 'return fetched repositories with http status created' do
+      user = create(:user, name: 'danielwsx64')
+
+      post :fetch, params: { user_id: user.id }
+
+      expected_github_ids = [111_328_638, 136_528_251, 136_524_424]
+
+      response_body = JSON.parse(
+        response.body
+      ).map { |repo| repo['github_id'] }
+
+      expect(response_body).to eq(expected_github_ids)
+      expect(response.content_type).to eq 'application/json'
+      expect(response).to have_http_status(:created)
+    end
+  end
 end

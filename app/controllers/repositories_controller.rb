@@ -1,10 +1,16 @@
 class RepositoriesController < ApplicationController
-  before_action :load_user, only: :index
+  before_action :load_user, only: %i[index fetch]
 
   def index
     repos = repositories.all
 
     render json: repos
+  end
+
+  def fetch
+    if fetch_repositories.execute
+      render json: user.repositories, status: :created
+    end
   end
 
   private
@@ -17,5 +23,9 @@ class RepositoriesController < ApplicationController
 
   def repositories
     user.present? ? user.repositories : Repository
+  end
+
+  def fetch_repositories
+    Services::Repository::Fetch.new(user)
   end
 end
