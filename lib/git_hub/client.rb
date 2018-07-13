@@ -3,16 +3,11 @@ module GitHub
     UserNotFound = Class.new(StandardError)
 
     def self.user_starred(user)
-      response = Faraday.get "#{GITHUB_CONFIG['url']}/users/#{user}/starred"
+      request = Faraday.get "#{GITHUB_CONFIG['url']}/users/#{user}/starred"
 
-      return JSON.parse(
-        response.body,
-        symbolize_names: true
-      ) if response.success?
+      return JSON.parse(request.body, symbolize_names: true) if request.success?
 
-      raise(
-        UserNotFound,  response.reason_phrase
-      ) if response.status.eql?(404)
+      raise(UserNotFound, request.reason_phrase) if request.status.eql?(404)
     end
   end
 end
