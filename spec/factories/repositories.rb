@@ -5,6 +5,6 @@ FactoryBot.define do
     description 'my awesome repo'
     html_url 'https://github.com/user/repo'
     language 'assembly'
-    user nil
+    user
   end
 end

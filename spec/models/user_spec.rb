@@ -1,6 +1,6 @@
 describe User, type: :model do
   describe 'Associations' do
-    it { is_expected.to have_many(:repository) }
+    it { is_expected.to have_many(:repositories) }
   end
 
   describe 'Validations' do

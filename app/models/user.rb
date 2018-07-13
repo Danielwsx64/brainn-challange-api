@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  has_many :repository
+  has_many :repositories
 
   validates :name, presence: true
 
