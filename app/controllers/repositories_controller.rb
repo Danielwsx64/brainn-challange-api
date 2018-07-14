@@ -25,6 +25,18 @@ class RepositoriesController < ApplicationController
     head :no_content
   end
 
+  def search
+    tag = Tag.find_by(
+      name: params[:tag]&.downcase
+    )
+
+    if tag
+      render json: tag.repositories, include: { tags: { only: :name } }
+    else
+      head :not_found
+    end
+  end
+
   private
 
   attr_reader :user

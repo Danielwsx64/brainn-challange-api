@@ -84,4 +84,44 @@ describe RepositoriesController, type: :controller do
       end
     end
   end
+
+  describe 'GET #search' do
+    context 'search by tag' do
+      it 'returns tag´s repositories as json with http status success' do
+        devops_tag = create(:tag, name: 'devops')
+        docker_tag = create(:tag, name: 'docker')
+
+        devops_repo = create(
+          :repository,
+          name: 'devops-stuff',
+          tags: [devops_tag]
+        )
+
+        _docker_repo = create(
+          :repository,
+          name: 'devops-stuff',
+          tags: [docker_tag]
+        )
+
+        expected_body = [
+          devops_repo.as_json( include: { tags: { only: :name } })
+        ].to_json
+
+        get :search, params: { tag: devops_tag.name }
+
+        expect(response.body).to eq(expected_body)
+        expect(response.content_type).to eq 'application/json'
+        expect(response).to have_http_status(:success)
+      end
+
+      context 'when tag not exist' do
+        it 'return not status http not found' do
+          tag_name = 'fake_tag'
+
+          get :search, params: { tag: tag_name }
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+    end
+  end
 end
