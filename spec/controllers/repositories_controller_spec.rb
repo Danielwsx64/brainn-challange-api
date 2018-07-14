@@ -4,13 +4,25 @@ describe RepositoriesController, type: :controller do
       repo_one = create(:repository, name: 'awesome_api')
       repo_two = create(:repository, name: 'awesome_front')
 
-      expected_body = [repo_one, repo_two].to_json
+      expected_body = [
+        repo_one.as_json(include: :tags),
+        repo_two.as_json(include: :tags)
+      ].to_json
 
       get :index
 
       expect(response.body).to eq(expected_body)
       expect(response.content_type).to eq 'application/json'
       expect(response).to have_http_status(:success)
+    end
+
+    it 'returns repositories tags' do
+      repository = create(:repository_with_tags)
+      expected_tags = repository.tags.to_json
+
+      get :index
+
+      expect(response.body).to include(expected_tags)
     end
 
     context 'when nested to user' do
@@ -22,7 +34,10 @@ describe RepositoriesController, type: :controller do
 
         _other_user_repo = create(:repository)
 
-        expected_body = [repo_one, repo_two].to_json
+        expected_body = [
+          repo_one.as_json(include: :tags),
+          repo_two.as_json(include: :tags)
+        ].to_json
 
         get :index, params: { user_id: user.id }
 

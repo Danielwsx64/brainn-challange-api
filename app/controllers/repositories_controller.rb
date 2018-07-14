@@ -4,7 +4,7 @@ class RepositoriesController < ApplicationController
   def index
     repos = repositories.all
 
-    render json: repos
+    render json: repos, include: { tags: { only: [:id, :name] } }
   end
 
   def fetch

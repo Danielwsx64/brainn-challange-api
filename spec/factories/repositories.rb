@@ -6,5 +6,15 @@ FactoryBot.define do
     html_url 'https://github.com/user/repo'
     language 'assembly'
     user
+
+    factory :repository_with_tags do
+      transient do
+        tags_count 2
+      end
+
+      after(:create) do |repository, evaluator|
+        create_list(:tag, evaluator.tags_count, repositories: [repository])
+      end
+    end
   end
 end
