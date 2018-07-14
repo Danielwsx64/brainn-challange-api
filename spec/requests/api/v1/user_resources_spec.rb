@@ -2,7 +2,7 @@ describe 'User resources management', :type => :request do
   it 'creates a user' do
     user_params = { name: 'Bill' }
 
-    post users_path, params: { user: user_params }
+    post api_v1_users_path, params: { user: user_params }
 
     parsed_body = JSON.parse(response.body, symbolize_names: true)
 
@@ -15,7 +15,7 @@ describe 'User resources management', :type => :request do
     user = create(:user)
     expected_response = user.to_json
 
-    get user_path(user)
+    get api_v1_user_path(user)
 
     expect(response.body).to eq(expected_response)
     expect(response.content_type).to eq 'application/json'
@@ -33,7 +33,7 @@ describe 'User resources management', :type => :request do
       repo_two.as_json(include: { tags: { only: :name } })
     ].to_json
 
-    get user_repositories_path(user)
+    get api_v1_user_repositories_path(user)
 
     expect(response.body).to eq(expected_body)
     expect(response.content_type).to eq 'application/json'
@@ -43,7 +43,7 @@ describe 'User resources management', :type => :request do
   it 'fetch user starred repositories from github' do
     user = create(:user, name: 'danielwsx64')
 
-    post fetch_user_repositories_path(user)
+    post fetch_api_v1_user_repositories_path(user)
 
     expected_github_ids = [111_328_638, 136_528_251, 136_524_424]
 
@@ -61,7 +61,7 @@ describe 'User resources management', :type => :request do
     tags = %w[docker devops]
 
     patch(
-      user_repository_path(repository.user, repository),
+      api_v1_user_repository_path(repository.user, repository),
       params: { repository: { tags: tags } }
     )
 
@@ -85,7 +85,7 @@ describe 'User resources management', :type => :request do
     ].to_json
 
     get(
-      search_user_repositories_path(devops_repo.user),
+      search_api_v1_user_repositories_path(devops_repo.user),
       params: { tag: devops_tag.name }
     )
 

@@ -1,4 +1,4 @@
-describe UsersController, type: :controller do
+describe Api::V1::UsersController, type: :controller do
   describe 'GET #show' do
     it 'returns user json data and http status success' do
       user = create :user

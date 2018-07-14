@@ -1,4 +1,4 @@
-describe RepositoriesController, type: :controller do
+describe Api::V1::RepositoriesController, type: :controller do
   describe 'GET #index' do
     it 'returns user`s repositories as json with http success' do
       user = create(:user, name: 'Bill')
