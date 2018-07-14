@@ -12,7 +12,8 @@ describe Services::Repository::Fetch do
       repository_fetch = described_class.new(user)
 
       expect { repository_fetch.execute }.to change(
-        user.repositories, :count
+        user.repositories,
+        :count
       ).from(0).to(3)
     end
 

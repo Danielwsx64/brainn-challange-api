@@ -1,8 +1,8 @@
 Rails.application.routes.draw do
-  get 'repositories/index'
+  resources :repositories, only: %i[index update]
 
-  resources :users, only: [:show, :create] do
-    resources :repositories, only: [:index] do
+  resources :users, only: %i[create show] do
+    resources :repositories, only: %i[index] do
       collection do
         post 'fetch'
       end

@@ -4,7 +4,7 @@ class RepositoriesController < ApplicationController
   def index
     repos = repositories.all
 
-    render json: repos, include: { tags: { only: [:id, :name] } }
+    render json: repos, include: { tags: { only: :name } }
   end
 
   def fetch
@@ -13,9 +13,25 @@ class RepositoriesController < ApplicationController
     end
   end
 
+  def update
+    repository = Repository.find(params[:id])
+    tags = repository_params[:tags]
+
+    Services::Repository::UpdateTags.new(
+      repository: repository,
+      tags: tags
+    ).execute
+
+    head :no_content
+  end
+
   private
 
   attr_reader :user
+
+  def repository_params
+    params.require(:repository).permit(tags: [])
+  end
 
   def load_user
     @user = User.find_by_id(params[:user_id])
