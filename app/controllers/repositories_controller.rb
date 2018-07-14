@@ -1,10 +1,12 @@
 class RepositoriesController < ApplicationController
-  before_action :load_user, only: %i[index fetch]
+  before_action :load_user, only: %i[index fetch search]
 
   def index
-    repos = repositories.all
+    return head :not_found unless user.present?
 
-    render json: repos, include: { tags: { only: :name } }
+    repositories = user.repositories.all
+
+    render json: repositories, include: { tags: { only: :name } }
   end
 
   def fetch
@@ -26,20 +28,23 @@ class RepositoriesController < ApplicationController
   end
 
   def search
-    tag = Tag.find_by(
-      name: params[:tag]&.downcase
-    )
+    return head :not_found unless user.present?
 
-    if tag
-      render json: tag.repositories, include: { tags: { only: :name } }
-    else
-      head :not_found
-    end
+    repositories = user
+      .repositories
+      .joins(:tags)
+      .where(tags: { name: sanitized_tag })
+
+    render json: repositories, include: { tags: { only: :name } }
   end
 
   private
 
   attr_reader :user
+
+  def sanitized_tag
+    return params[:tag].downcase if params[:tag].present?
+  end
 
   def repository_params
     params.require(:repository).permit(tags: [])
@@ -47,10 +52,6 @@ class RepositoriesController < ApplicationController
 
   def load_user
     @user = User.find_by_id(params[:user_id])
-  end
-
-  def repositories
-    user.present? ? user.repositories : Repository
   end
 
   def fetch_repositories
