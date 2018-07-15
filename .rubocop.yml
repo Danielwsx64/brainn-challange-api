@@ -1,5 +1,6 @@
 AllCops:
   Exclude:
+    - 'lib/tasks/*.rake'
     - 'config/**/*'
     - 'spec/spec_helper.rb'
     - 'spec/rails_helper.rb'

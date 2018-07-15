@@ -10,6 +10,9 @@ run: setup
 test: setup
 	$(RUN) bundle exec rspec spec
 
+quality: setup
+	$(RUN) bash -c "bundle exec rake check_rubycritc && rubocop"
+
 console: setup
 	$(RUN) bundle exec rails c
 
