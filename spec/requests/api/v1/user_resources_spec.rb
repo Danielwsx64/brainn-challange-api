@@ -1,4 +1,4 @@
-describe 'User management', :type => :request do
+describe 'User management', type: :request do
   include Docs::V1::Users::Api
 
   describe 'GET /api/v1/users/:id' do

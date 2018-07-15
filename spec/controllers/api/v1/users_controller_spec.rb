@@ -26,7 +26,15 @@ describe Api::V1::UsersController, type: :controller do
   end
 
   describe 'POST #create' do
-    it 'create a user and return json data with http status created' do
+    it 'creates a user' do
+      user_params = { name: 'Alan' }
+
+      expect do
+        post :create, params: { user: user_params }
+      end.to change(User, :count).from(0).to(1)
+    end
+
+    it 'return json data with http status created' do
       user_params = { name: 'Alan' }
 
       post :create, params: { user: user_params }
@@ -36,6 +44,18 @@ describe Api::V1::UsersController, type: :controller do
       expect(parsed_body).to include user_params
       expect(response.content_type).to eq 'application/json'
       expect(response).to have_http_status(:created)
+    end
+
+    context 'when invalid params' do
+      it 'return http status bad_request' do
+        user_params = 'invalid_params'
+
+        post :create, params: { user: user_params }
+
+        expect(response.body).to include 'bad request'
+        expect(response.content_type).to eq 'application/json'
+        expect(response).to have_http_status(:bad_request)
+      end
     end
   end
 end

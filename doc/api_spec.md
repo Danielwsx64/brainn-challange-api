@@ -9,10 +9,10 @@
 ### Get user`s repositories [GET /api/v1/users/{user_id}/repositories]
 
 + Parameters
-    + user_id: `764` (number, required)
+    + user_id: `3` (number, required)
 
 + Request returns user`s repositories
-**GET**&nbsp;&nbsp;`/api/v1/users/764/repositories`
+**GET**&nbsp;&nbsp;`/api/v1/users/3/repositories`
 
     + Headers
 
@@ -28,13 +28,13 @@
 
             [
               {
-                "id": 883,
+                "id": 1,
                 "github_id": 1,
                 "name": "repo_name",
                 "description": "my awesome repo",
                 "html_url": "https://github.com/user/repo",
                 "language": "assembly",
-                "user_id": 764,
+                "user_id": 3,
                 "tags": [
                   {
                     "name": "tag_1"
@@ -45,13 +45,13 @@
                 ]
               },
               {
-                "id": 884,
+                "id": 2,
                 "github_id": 1,
                 "name": "repo_name",
                 "description": "my awesome repo",
                 "html_url": "https://github.com/user/repo",
                 "language": "assembly",
-                "user_id": 764,
+                "user_id": 3,
                 "tags": [
                   {
                     "name": "tag_1"
@@ -63,14 +63,65 @@
               }
             ]
 
+### Fetch starred repositories [POST /api/v1/users/{user_id}/repositories/fetch]
+
++ Parameters
+    + user_id: `4` (number, required)
+
++ Request fetch starred repositories
+**POST**&nbsp;&nbsp;`/api/v1/users/4/repositories/fetch`
+
+    + Headers
+
+            Accept: application/json
+            Content-Type: application/x-www-form-urlencoded
+
++ Response 201
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            [
+              {
+                "id": 3,
+                "github_id": 111328638,
+                "name": "crm-filter",
+                "description": null,
+                "html_url": "https://github.com/Danielwsx64/crm-filter",
+                "language": "PHP",
+                "user_id": 4
+              },
+              {
+                "id": 4,
+                "github_id": 136528251,
+                "name": "doctors_api",
+                "description": "API written in Elixir to provide services and channels to the doctors-front application",
+                "html_url": "https://github.com/ecamalionte/doctors_api",
+                "language": "Elixir",
+                "user_id": 4
+              },
+              {
+                "id": 5,
+                "github_id": 136524424,
+                "name": "doctors-front",
+                "description": "React application responsible for connecting and rendering doctors-api information.",
+                "html_url": "https://github.com/ecamalionte/doctors-front",
+                "language": "JavaScript",
+                "user_id": 4
+              }
+            ]
+
 ### Update repository tags [PATCH /api/v1/users/{user_id}/repositories/{id}]
 
 + Parameters
-    + user_id: `765` (number, required)
-    + id: `885` (number, required)
+    + user_id: `5` (number, required)
+    + id: `6` (number, required)
 
 + Request updates repository tags
-**PATCH**&nbsp;&nbsp;`/api/v1/users/765/repositories/885`
+**PATCH**&nbsp;&nbsp;`/api/v1/users/5/repositories/6`
 
     + Headers
 
@@ -86,10 +137,10 @@
 ### Search repositories by tag [GET /api/v1/users/{user_id}/repositories/search]
 
 + Parameters
-    + user_id: `766` (number, required)
+    + user_id: `6` (number, required)
 
 + Request search repositories by tag
-**GET**&nbsp;&nbsp;`/api/v1/users/766/repositories/search?tag=devops`
+**GET**&nbsp;&nbsp;`/api/v1/users/6/repositories/search?tag=devops`
 
     + Headers
 
@@ -105,13 +156,13 @@
 
             [
               {
-                "id": 886,
+                "id": 7,
                 "github_id": 1,
                 "name": "devops-stuff",
                 "description": "my awesome repo",
                 "html_url": "https://github.com/user/repo",
                 "language": "assembly",
-                "user_id": 766,
+                "user_id": 6,
                 "tags": [
                   {
                     "name": "devops"
@@ -129,10 +180,10 @@
 ### Get an user [GET /api/v1/users/{id}]
 
 + Parameters
-    + id: `762` (number, required)
+    + id: `1` (number, required)
 
 + Request returns an user
-**GET**&nbsp;&nbsp;`/api/v1/users/762`
+**GET**&nbsp;&nbsp;`/api/v1/users/1`
 
     + Headers
 
@@ -147,7 +198,7 @@
     + Body
 
             {
-              "id": 762,
+              "id": 1,
               "name": "user_1"
             }
 
@@ -175,6 +226,6 @@
     + Body
 
             {
-              "id": 763,
+              "id": 2,
               "name": "Bill"
             }

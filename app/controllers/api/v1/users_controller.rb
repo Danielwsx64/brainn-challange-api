@@ -21,6 +21,8 @@ module Api
 
       def user_params
         params.require(:user).permit(:name)
+      rescue StandardError
+        raise ActionController::ParameterMissing, 'Failed on parse user params'
       end
     end
   end

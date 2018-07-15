@@ -1,4 +1,4 @@
-describe 'User`s resources management', :type => :request do
+describe 'User`s resources management', type: :request do
   include Docs::V1::Repositories::Api
 
   let(:headers) do
@@ -35,7 +35,7 @@ describe 'User`s resources management', :type => :request do
   describe 'POST /api/v1/users/:id/repositories/fetch' do
     include Docs::V1::Repositories::Fetch
 
-    it 'fetch starred repositories' do
+    it 'fetch starred repositories', :dox do
       user = create(:user, name: 'danielwsx64')
 
       post fetch_api_v1_user_repositories_path(user), headers: headers

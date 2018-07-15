@@ -42,7 +42,15 @@ describe Api::V1::RepositoriesController, type: :controller do
   end
 
   describe 'POST #fetch' do
-    it 'return fetched repositories with http status created' do
+    it 'fetch user repositories' do
+      user = create(:user, name: 'danielwsx64')
+
+      expect do
+        post :fetch, params: { user_id: user.id }
+      end.to change(user.repositories, :count).from(0).to(3)
+    end
+
+    it 'returns fetched repositories with http status created' do
       user = create(:user, name: 'danielwsx64')
 
       post :fetch, params: { user_id: user.id }
@@ -57,11 +65,44 @@ describe Api::V1::RepositoriesController, type: :controller do
       expect(response.content_type).to eq 'application/json'
       expect(response).to have_http_status(:created)
     end
+
+    context 'when can not fetch user repositories' do
+      it 'returns http status unprocessable_entity' do
+        user = create(:user, name: 'some-invalid-user-to-raise-error')
+
+        post :fetch, params: { user_id: user.id }
+
+        expect(response.body).to include 'errors'
+        expect(response.content_type).to eq 'application/json'
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+    end
+
+    context 'when user not exists' do
+      it 'returns http status not_found' do
+        post :fetch, params: { user_id: 0 }
+
+        expect(response).to have_http_status(:not_found)
+      end
+    end
   end
 
   describe 'POST #update' do
     context 'change tags' do
-      it 'update repository tags and return http status no_content' do
+      it 'update repository tags' do
+        repository = create(:repository, tags: [])
+        tags = %w[docker devops]
+
+        expect do
+          patch :update, params: {
+            user_id: repository.user.id,
+            id: repository.id,
+            repository: { tags: tags }
+          }
+        end.to change(repository.tags, :count).from(0).to(2)
+      end
+
+      it 'returns http status no_content' do
         repository = create(:repository)
         tags = %w[docker devops]
 
@@ -71,10 +112,69 @@ describe Api::V1::RepositoriesController, type: :controller do
           repository: { tags: tags }
         }
 
-        repository_tags_names = repository.tags.map(&:name)
-
         expect(response).to have_http_status(:no_content)
+      end
+
+      it 'remove old tags' do
+        old_tag =  create(:tag, name: 'some_old')
+        repository = create(:repository, tags: [old_tag])
+        tags = %w[docker devops]
+
+        patch :update, params: {
+          user_id: repository.user.id,
+          id: repository.id,
+          repository: { tags: tags }
+        }
+
+        repository.reload
+
+        repository_tags_names = repository.tags.map(&:name)
         expect(repository_tags_names).to eq(tags)
+      end
+
+      context 'when invalid params' do
+        it 'return http status bad_request' do
+          repository = create(:repository)
+          repository_params = 'invalid_params'
+
+          patch :update, params: {
+            user_id: repository.user.id,
+            id: repository.id,
+            repository: repository_params
+          }
+
+          expect(response.body).to include 'bad request'
+          expect(response.content_type).to eq 'application/json'
+          expect(response).to have_http_status(:bad_request)
+        end
+      end
+
+      context 'when user not exists' do
+        it 'returns http status not_found' do
+          repository = create(:repository)
+
+          patch :update, params: {
+            user_id: 0,
+            id: repository.id,
+            repository: { tags: [] }
+          }
+
+          expect(response).to have_http_status(:not_found)
+        end
+      end
+
+      context 'when repository not exists' do
+        it 'returns http status not_found' do
+          user = create(:user)
+
+          patch :update, params: {
+            user_id: user.id,
+            id: 0,
+            repository: { tags: [] }
+          }
+
+          expect(response).to have_http_status(:not_found)
+        end
       end
     end
   end

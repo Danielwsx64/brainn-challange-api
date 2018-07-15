@@ -1,10 +1,10 @@
 module Api
   module V1
     class RepositoriesController < ApplicationController
-      before_action :load_user, only: %i[index fetch search]
+      before_action :load_user, only: %i[index fetch search update]
 
       def index
-        return head :not_found unless user.present?
+        return head :not_found if user.nil?
 
         repositories = user.repositories.all
 
@@ -12,18 +12,23 @@ module Api
       end
 
       def fetch
-        if fetch_repositories.execute
-          render json: user.repositories, status: :created
-        end
+        return head :not_found if user.nil?
+
+        fetch_repositories.execute
+
+        render json: user.repositories, status: :created
+      rescue Services::Repository::Fetch::FailureOnFetch => exception
+        render(
+          json: { errors: exception.message }, status: :unprocessable_entity
+        )
       end
 
       def update
-        repository = Repository.find(params[:id])
-        tags = repository_params[:tags]
+        return head :not_found if user.nil? || repository_to_update.nil?
 
         Services::Repository::UpdateTags.new(
-          repository: repository,
-          tags: tags
+          repository: repository_to_update,
+          tags: repository_params[:tags]
         ).execute
 
         head :no_content
@@ -44,16 +49,25 @@ module Api
 
       attr_reader :user
 
+      def repository_params
+        params.require(:repository).permit(tags: [])
+      rescue StandardError
+        raise(
+          ActionController::ParameterMissing,
+          'Failed on parse repository params'
+        )
+      end
+
       def sanitized_tag
         return params[:tag].downcase if params[:tag].present?
       end
 
-      def repository_params
-        params.require(:repository).permit(tags: [])
-      end
-
       def load_user
         @user = User.find_by_id(params[:user_id])
+      end
+
+      def repository_to_update
+        user.repositories.find_by_id(params[:id])
       end
 
       def fetch_repositories
