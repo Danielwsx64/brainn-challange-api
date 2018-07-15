@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.4.2'
+ruby '2.4.4'
 
 gem 'faraday'
 gem 'pg', '>= 0.18', '< 2.0'
@@ -17,6 +17,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 group :development, :test do
+  gem 'dotenv-rails'
   gem 'dox'
   gem 'factory_bot_rails'
   gem 'pry-byebug'

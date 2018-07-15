@@ -1,11 +1,10 @@
 default: &default
   adapter: postgresql
-  encoding: unicode
-  username: postgres
-  password: ''
-  host: localhost
   encoding: utf8
-  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV.fetch('API_DATABASE_USER') %>
+  password: <%= ENV.fetch('API_DATABASE_PASS') %>
+  host: <%= ENV.fetch('API_DATABASE_HOST') %>
+  pool: <%= ENV.fetch('API_DATABASE_POOL') %>
 
 development:
   <<: *default
@@ -17,6 +16,4 @@ test:
 
 production:
   <<: *default
-  database: challenge-api_production
-  username: challenge-api
-  password: <%= ENV['CHALLENGE-API_DATABASE_PASSWORD'] %>
+  database: <%= ENV.fetch('API_DATABASE_NAME') %>

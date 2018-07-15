@@ -1,0 +1,43 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+
+  migration:
+    build: .
+    image: challange_api
+    command: bundle exec rails db:setup
+    volumes:
+      - .:/var/www/challange-api
+    environment:
+      RAILS_ENV: development
+      API_DATABASE_NAME: challange_api
+      API_DATABASE_HOST: db
+      API_DATABASE_USER: postgres
+      API_DATABASE_PASS: 123456
+      API_DATABASE_POOL: 5
+    depends_on:
+      - db
+  web:
+    image: challange_api
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/var/www/challange-api
+    ports:
+      - "3000:3000"
+    environment:
+      RAILS_ENV: development
+      API_DATABASE_NAME: challange_api
+      API_DATABASE_HOST: db
+      API_DATABASE_USER: postgres
+      API_DATABASE_PASS: 123456
+      API_DATABASE_POOL: 5
+
+    depends_on:
+      - db
+      - migration
