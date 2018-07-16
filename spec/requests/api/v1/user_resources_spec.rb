@@ -11,7 +11,7 @@ describe 'User management', type: :request do
       get api_v1_user_path(user)
 
       expect(response.body).to eq(expected_response)
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:ok)
     end
   end
 

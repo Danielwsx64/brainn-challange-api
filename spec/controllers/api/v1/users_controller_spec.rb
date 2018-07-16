@@ -1,6 +1,6 @@
 describe Api::V1::UsersController, type: :controller do
   describe 'GET #show' do
-    it 'returns user json data and http status success' do
+    it 'returns user json data and http status ok' do
       user = create :user
       expected_response = user.to_json
 
@@ -8,7 +8,7 @@ describe Api::V1::UsersController, type: :controller do
 
       expect(response.body).to eq(expected_response)
       expect(response.content_type).to eq 'application/json'
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:ok)
     end
 
     context 'when user is not found' do
@@ -44,6 +44,28 @@ describe Api::V1::UsersController, type: :controller do
       expect(parsed_body).to include user_params
       expect(response.content_type).to eq 'application/json'
       expect(response).to have_http_status(:created)
+    end
+
+    context 'when username has already been created' do
+      it 'not creates a new user' do
+        user = create(:user)
+        user_params = { name: user.name }
+
+        expect do
+          post :create, params: { user: user_params }
+        end.to_not change(User, :count)
+      end
+
+      it 'return user as json with http status ok' do
+        user = create(:user)
+        user_params = { name: user.name }
+
+        post :create, params: { user: user_params }
+
+        expect(response.body).to include user.to_json
+        expect(response.content_type).to eq 'application/json'
+        expect(response).to have_http_status(:ok)
+      end
     end
 
     context 'when invalid params' do

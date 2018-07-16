@@ -1,6 +1,6 @@
 describe Api::V1::RepositoriesController, type: :controller do
   describe 'GET #index' do
-    it 'returns user`s repositories as json with http success' do
+    it 'returns user`s repositories as json with http ok' do
       user = create(:user, name: 'Bill')
 
       repo_one = create(:repository, name: 'awesome_api', user: user)
@@ -17,7 +17,7 @@ describe Api::V1::RepositoriesController, type: :controller do
 
       expect(response.body).to eq(expected_body)
       expect(response.content_type).to eq 'application/json'
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:ok)
     end
 
     it 'returns repositories tags' do
@@ -181,7 +181,7 @@ describe Api::V1::RepositoriesController, type: :controller do
 
   describe 'GET #search' do
     context 'search by tag' do
-      it 'returns tag´s repositories as json with http status success' do
+      it 'returns tag´s repositories as json with http status ok' do
         user = create(:user, name: 'Bill')
 
         devops_tag = create(:tag, name: 'devops')
@@ -209,7 +209,7 @@ describe Api::V1::RepositoriesController, type: :controller do
 
         expect(response.body).to eq(expected_body)
         expect(response.content_type).to eq 'application/json'
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:ok)
       end
 
       it 'returns just user repositories' do
@@ -240,7 +240,7 @@ describe Api::V1::RepositoriesController, type: :controller do
       end
 
       context 'when has no repos with tag' do
-        it 'returns empty with http status success' do
+        it 'returns empty with http status ok' do
           user = create(:user)
 
           tag_name = 'fake_tag'
@@ -250,7 +250,7 @@ describe Api::V1::RepositoriesController, type: :controller do
           get :search, params: { user_id: user.id, tag: tag_name }
 
           expect(response.body).to eq(expected_body)
-          expect(response).to have_http_status(:success)
+          expect(response).to have_http_status(:ok)
         end
       end
 

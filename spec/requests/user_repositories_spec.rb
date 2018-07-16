@@ -28,7 +28,7 @@ describe 'User`s resources management', type: :request do
 
       expect(response.body).to eq(expected_body)
       expect(response.content_type).to eq 'application/json'
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:ok)
     end
   end
 
@@ -96,7 +96,7 @@ describe 'User`s resources management', type: :request do
 
       expect(response.body).to eq(expected_body)
       expect(response.content_type).to eq 'application/json'
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:ok)
     end
   end
 end

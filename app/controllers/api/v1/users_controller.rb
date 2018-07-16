@@ -12,6 +12,10 @@ module Api
       end
 
       def create
+        user = User.find_by(user_params)
+
+        return render json: user, status: :ok if user.present?
+
         user = User.create(user_params)
 
         render json: user, status: :created
