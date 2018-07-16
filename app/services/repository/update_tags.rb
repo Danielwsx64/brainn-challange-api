@@ -9,7 +9,7 @@ module Services
       end
 
       def execute
-        remove_unwanted_tags
+        remove_old_tags
 
         repository.tags << sanitized_tags
 
@@ -39,16 +39,8 @@ module Services
         end
       end
 
-      def wanted_tags_id
-        sanitized_tags.map(&:id)
-      end
-
-      def unwanted_tags
-        repository.tags.where.not(id: wanted_tags_id)
-      end
-
-      def remove_unwanted_tags
-        repository.tags.delete(unwanted_tags)
+      def remove_old_tags
+        repository.tags.delete(repository.tags)
       end
     end
   end

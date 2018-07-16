@@ -44,6 +44,23 @@ describe Services::Repository::UpdateTags do
       expect(repository_tags_names).to eq(new_tags)
     end
 
+    context 'When repository already has tag' do
+      it 'not duplicate association' do
+        tag = create(:tag)
+
+        repository = create(:repository, tags: [tag])
+
+        new_tags = [tag.name]
+
+        expect do
+          described_class.new(
+            repository: repository,
+            tags: new_tags
+          ).execute
+        end.to_not change(repository.tags, :count)
+      end
+    end
+
     context 'When can not update repositories tags' do
       it 'raise a error' do
         repository = create(:repository)

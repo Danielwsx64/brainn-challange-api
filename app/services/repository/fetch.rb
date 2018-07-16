@@ -59,7 +59,7 @@ module Services
       end
 
       def wanted_repositories_github_id
-        repositories.map{ |r| r[:id] }
+        repositories.map { |r| r[:id] }
       end
 
       def unwanted_repositories
