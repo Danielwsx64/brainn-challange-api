@@ -28,6 +28,44 @@ describe Services::Repository::Fetch do
       expect(fetched_repositories).to eq(expected_github_ids)
     end
 
+    context 'When has old repositories' do
+      it 'keep just new repositories' do
+        user = create(:user, name: 'danielwsx64')
+        tag = create(:tag)
+        _old_repository = create(:repository, user: user, tags: [tag])
+
+        repository_fetch = described_class.new(user)
+
+        expect { repository_fetch.execute }.to change(
+          user.repositories,
+          :count
+        ).from(1).to(3)
+      end
+    end
+
+    context 'when repository already exists' do
+      it 'update repository data' do
+        user = create(:user, name: 'danielwsx64')
+        tag = create(:tag)
+
+        repository = create(
+          :repository,
+          name: 'old name',
+          github_id: 111_328_638,
+          user: user,
+          tags: [tag]
+        )
+
+        repository_fetch = described_class.new(user)
+
+        repository_fetch.execute
+
+        repository.reload
+        expect(repository.name).to eq 'crm-filter'
+        expect(repository.tags).to eq [tag]
+      end
+    end
+
     context 'When can not fetch user repositories' do
       it 'raise a error' do
         user = create(:user, name: 'invalid-login-name-to-raise-error')
