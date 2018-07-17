@@ -18,3 +18,6 @@ console: setup
 
 bash:
 	$(RUN) /bin/bash
+
+build:
+	docker-compose build

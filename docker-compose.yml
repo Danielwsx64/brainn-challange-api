@@ -3,11 +3,11 @@ services:
   challange-api:
     build: .
     image: challange_api
-    command: bundle exec rails s -p 3000 -b 0.0.0.0
+    command: bundle exec rails s -p 4000 -b 0.0.0.0
     volumes:
       - .:/var/www/challange-api
     ports:
-      - "3000:3000"
+      - "4000:4000"
     environment:
       API_DATABASE_NAME: challange_api
       API_DATABASE_HOST: db
@@ -16,7 +16,6 @@ services:
       API_DATABASE_POOL: 5
     depends_on:
       - db
-
   db:
     image: postgres
     ports:
